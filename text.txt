@@ -1,0 +1,7 @@
+Hello, this is a test file.
+The following line includes numbers: 123 456 7890.
+This line includes special characters: @#$%^&*().
+Here's a line with multiple matches: cat bat rat.
+Another line with overlapping matches: ababa, for regex 'aba'.
+Color test: red, green, blue.
+End of the file.
