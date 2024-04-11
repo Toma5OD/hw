@@ -17,44 +17,61 @@ def search_in_line(line, regex, filename='', line_num=1, args=None):
     if not matches:
         return  # No matches, skip this line
 
-    line_stripped = line.rstrip('\n')  # Remove newline for consistent handling
-    prefix = f"{filename}:{line_num}: "  # Prefix to print before the line content
+    line_stripped = line.rstrip('\n')
+    prefix = f"{filename}:{line_num}: "
 
+    output_generated = False
+
+    # Machine-readable output
+    if args.machine:
+        print("Machine-readable output:")
+        for match in matches:
+            start, _ = match.span()
+            print(f"{filename}:{line_num}:{start}:{match.group()}")
+        output_generated = True
+
+    highlighted_line = line_stripped
     if args.color:
-        # Prepare the line with color highlights
-        highlighted_line = line_stripped
+        if output_generated:  # Check before color-specific output
+            print()  # Separate from previous output only if it was generated
+        # Color output message
+        if not args.underscore:  # Print if not combined with underscore
+            print("Color-highlighted output:")
         offset = 0
         for match in matches:
             start, end = match.span()
             start += offset
             end += offset
             matched_text = match.group()
-            # Insert ANSI color codes
             highlighted_line = highlighted_line[:start] + f"\033[31m{matched_text}\033[0m" + highlighted_line[end:]
-            # Adjust offset for added ANSI code lengths
             offset += len(f"\033[31m{matched_text}\033[0m") - len(matched_text)
+        output_generated = True
 
+    # Prepare underscores for matched text
+    underscore_str = ''
     if args.underscore:
-        # Prepare underscores for the matched text
         underscores = [' '] * len(line_stripped)
         for match in matches:
             start, end = match.span()
             for i in range(start, end):
                 underscores[i] = '^'
         underscore_str = ''.join(underscores)
-
-    # Printing logic
-    if args.color:
-        print(prefix + highlighted_line)
+        # Print underscore output message
+        if not args.color:  # Avoid printing message if color or machine output is shown
+            print("Underscored output:")
+        
+    # Output handling
+    if args.color or args.underscore:
+        if args.color and args.underscore:  # Combined output
+            print("Combined color-highlighted and underscored output:")
+        print(prefix + (highlighted_line if args.color else line_stripped))
         if args.underscore:
-            # Print underscores on a new line if both color and underscore are selected
             print(' ' * len(prefix) + underscore_str)
-    elif args.underscore:
-        # Print line and underscores if only underscore option is selected
-        print(prefix + line_stripped)
-        print(' ' * len(prefix) + underscore_str)
-    else:
-        # Default print statement if no special flags are used
+        output_generated = True
+
+    # Default output when no specific format is requested
+    if not any([args.machine, args.color, args.underscore]) and output_generated:
+        print("Default output:")  # Separate from previous output if applicable
         print(prefix + line_stripped)
 
 def read_and_search(args):
