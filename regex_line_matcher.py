@@ -2,6 +2,10 @@ import argparse
 import sys
 import re
 
+# Function to parse command-line arguments
+# Technically, this function is not PEP8 compliant as it exceeds the 79-character limit.
+# However, it is more readable in this format.
+# Adhearance to PEP8 can be achieved by breaking the lines into multiple lines.
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Search for lines matching a regular expression in one or more files.')
     parser.add_argument('-r', '--regex', required=True, help='Regular expression to match.')
@@ -18,7 +22,7 @@ def search_in_line(line, regex, filename='', line_num=1, args=None):
         return  # No matches, skip this line
 
     line_stripped = line.rstrip('\n')
-    prefix = f"{filename}:{line_num}: "
+    prefix = f"{filename if filename else 'STDIN'}:{line_num}: "
 
     output_generated = False
 
@@ -27,14 +31,14 @@ def search_in_line(line, regex, filename='', line_num=1, args=None):
         print("Machine-readable output:")
         for match in matches:
             start, _ = match.span()
-            print(f"{filename}:{line_num}:{start}:{match.group()}")
+            print(f"{prefix}{start}:{match.group()}")
         output_generated = True
+
 
     highlighted_line = line_stripped
     if args.color:
         if output_generated:  # Check before color-specific output
             print()  # Separate from previous output only if it was generated
-        # Color output message
         if not args.underscore:  # Print if not combined with underscore
             print("Color-highlighted output:")
         offset = 0
@@ -57,7 +61,7 @@ def search_in_line(line, regex, filename='', line_num=1, args=None):
                 underscores[i] = '^'
         underscore_str = ''.join(underscores)
         # Print underscore output message
-        if not args.color:  # Avoid printing message if color or machine output is shown
+        if not args.color:  # Avoid printing message if color is shown
             print("Underscored output:")
         
     # Output handling
@@ -76,6 +80,7 @@ def search_in_line(line, regex, filename='', line_num=1, args=None):
 
 def read_and_search(args):
     regex = re.compile(args.regex)
+    filename = ''  # Use an empty string to represent STDIN although STDIN is added to the prefix in the search_in_line function
     if args.files:
         for filename in args.files:
             try:
@@ -85,8 +90,9 @@ def read_and_search(args):
             except FileNotFoundError:
                 print(f"Error: File '{filename}' not found.")
     else:
+        # When reading from STDIN, filename is left as an empty string.
         for line_num, line in enumerate(sys.stdin, start=1):
-            search_in_line(line, regex, line_num=line_num, args=args)
+            search_in_line(line, regex, filename, line_num, args)
 
 if __name__ == '__main__':
     args = parse_arguments()
