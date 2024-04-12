@@ -2,7 +2,7 @@ import argparse
 import sys
 import re
 
-# Base class for handling input and searches
+# Base class for handling input and searches, acting as the Context in the Strategy pattern
 class RegexSearcher:
     def __init__(self, regex, input_sources=None):
         self.regex = re.compile(regex)
@@ -39,6 +39,7 @@ class RegexSearcher:
         # Default implementation, should be overridden
         pass
 
+# Strategy implementations below, each subclass represents a concrete strategy for output formatting
 # Subclass for machine-readable output
 class MachineReadable(RegexSearcher):
     def __init__(self, regex, input_sources=None):

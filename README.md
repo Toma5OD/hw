@@ -25,11 +25,13 @@ Below is an image illustrating the layout of the `public` folder, showcasing whe
 
 ## File Descriptions
 
-- **regex_line_matcher.py**: This is the main script. It searches for lines in text files that match a specified regular expression. The script can read from files listed in command arguments or from Standard Input (STDIN) if no files are specified.
+- **oop_regex_line_matcher.py**: This is the main script and the most recent version, which utilizes Object-Oriented Programming principles. It searches for lines in text files that match a specified regular expression. This script represents an advanced iteration with improved modularity and flexibility.
 
-- **text.txt**: A test text file used to demonstrate and test the functionality of the `regex_line_matcher.py` script.
+- **regex_line_matcher.py**: A previous version of the script that may not fully utilize Object-Oriented Programming principles. It serves as an earlier iteration for searching lines that match specified regular expressions in text files. The script can read from files listed in command arguments or from Standard Input (STDIN) if no files are specified.
 
-- **test2.txt**: Another test text file that serves a similar purpose.
+- **text.txt**: A test text file used to demonstrate and test the functionality of the main script, `oop_regex_line_matcher.py`. This file is relatively small, making it ideal for quick demonstrations and validations.
+
+- **text2.txt**: Another test text file, serving a similar purpose. This file is used to validate functionalities in different versions of the script, including the earlier `regex_line_matcher.py`.
 
 ## Features Implemented
 
@@ -39,15 +41,22 @@ Below is an image illustrating the layout of the `public` folder, showcasing whe
   - **Underscore**: Prints a caret (`^`) under the matching text.
   - **Color**: Highlights the matching text in the terminal.
   - **Machine Readable**: Generates output in a format suitable for machine parsing: `file_name:no_line:start_pos:matched_text`.
+  - **Combined Color and Underscore**: Provides an option to highlight matching text and print carets under the matching sections simultaneously.
 - **Support for Multiple Matches**: Capable of identifying and formatting multiple matches within a single line, without overlapping.
 - **PEP8 Compliant**: The code structure adheres to the PEP8 coding guidelines, ensuring readability and maintainability.
+- **Error Handling**: Includes basic error management for file access issues and provides user feedback for missing arguments.
+- **Documentation**: Inline comments and method descriptions are provided to explain the functionality and usage of the classes and functions.
+
+### Design Pattern Used
+
+- **Strategy Pattern**: The script employs the strategy pattern through the use of different output formatting classes that inherit from a common base. This design allows for flexible and interchangeable output behaviors depending on user options without altering the core logic of input processing and regex matching.
 
 ## Usage
 
-To use the script, navigate to the directory containing `regex_line_matcher.py` and run the following command in the terminal:
+To use the script, navigate to the directory containing `oop_regex_line_matcher.py` and run the following command in the terminal:
 
 ```bash
-python regex_line_matcher.py -r "YOUR_REGEX" -f text.txt file2.txt ... [OPTIONS]
+python oop_regex_line_matcher.py -r "YOUR_REGEX" -f text2.txt ... [OPTIONS]
 ```
 
 ### Options
@@ -60,18 +69,22 @@ python regex_line_matcher.py -r "YOUR_REGEX" -f text.txt file2.txt ... [OPTIONS]
 
 ### Examples
 
-Search for digits in `text.txt` and highlight them:
+Search for digits in `text2.txt` and highlight them:
 
 ```bash
-python regex_line_matcher.py -r "\d+" -f text.txt --color
+python oop_regex_line_matcher.py -r "\d+" -f text.txt --color
 ```
 
 Read from STDIN and generate machine-readable output for matches:
 
 ```bash
-cat text.txt | python regex_line_matcher.py -r "\d+" --m
+cat text.txt | python oop_regex_line_matcher.py -r "\d+" --machine
 ```
 
 ## Implementation Details
 
-The script employs the `argparse` module for command-line argument parsing and the `re` module for regex matching, adhering to recommended practices for Python scripting. The choice of output formatting demonstrates a simple yet effective application of conditional logic to provide user-friendly and versatile output customization.
+The script employs the `argparse` module for command-line argument parsing and the `re` module for regex matching, adhering to recommended practices for Python scripting. The choice of output formatting demonstrates a simple yet effective application of conditional logic to provide user-friendly and versatile output customization based on user commands. This approach not only makes the script highly adaptable to different use cases but also showcases efficient programming techniques in Python.
+
+## License
+
+This script is made available under the MIT License, which allows for wide use, modification, distribution, and private or commercial purposes. The MIT License is one of the most permissive and straightforward licenses available, ensuring that the script remains free and open-source, with minimal restrictions on its usage. This approach encourages innovation and collaboration by allowing users and developers to build upon the work without complex legal barriers.
